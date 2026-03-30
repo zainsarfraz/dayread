@@ -21,6 +21,7 @@ type NavUser = {
 const navLinks = [
   { href: '/queue', label: 'Queue' },
   { href: '/bookmarks', label: 'Bookmarks' },
+  { href: '/history', label: 'History' },
   { href: '/stats', label: 'Stats', icon: BarChart3 },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]

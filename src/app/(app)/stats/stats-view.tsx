@@ -7,7 +7,7 @@
 'use client'
 
 import { clsx } from 'clsx'
-import { Flame, BookOpen, Bookmark, SkipForward, Clock } from 'lucide-react'
+import { Flame, BookOpen, Bookmark, SkipForward, Clock, ThumbsUp, ThumbsDown } from 'lucide-react'
 
 type StatsProps = {
   streak: { current: number; longest: number }
@@ -17,6 +17,7 @@ type StatsProps = {
   topTopics: { tag: string; count: number }[]
   topSources: { sourceName: string; count: number }[]
   timePeriods: { label: string; range: string; count: number }[]
+  feedback: { positive: number; negative: number }
 }
 
 export function StatsView({
@@ -27,6 +28,7 @@ export function StatsView({
   topTopics,
   topSources,
   timePeriods,
+  feedback,
 }: StatsProps) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
@@ -86,6 +88,42 @@ export function StatsView({
         <SummaryCard title="This Week" data={weekly} />
         <SummaryCard title="This Month" data={monthly} />
       </div>
+
+      {/* Feedback */}
+      {(feedback.positive > 0 || feedback.negative > 0) && (
+        <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
+            Article Feedback
+          </h2>
+          <div className="mt-4 flex gap-6">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/15">
+                <ThumbsUp className="h-4 w-4 text-success" />
+              </div>
+              <div>
+                <p className="text-lg font-semibold text-text-primary">{feedback.positive}</p>
+                <p className="text-xs text-text-tertiary">Useful</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-skip/15">
+                <ThumbsDown className="h-4 w-4 text-skip" />
+              </div>
+              <div>
+                <p className="text-lg font-semibold text-text-primary">{feedback.negative}</p>
+                <p className="text-xs text-text-tertiary">Not useful</p>
+              </div>
+            </div>
+            {(feedback.positive + feedback.negative) > 0 && (
+              <div className="ml-auto flex items-center">
+                <p className="text-sm text-text-secondary">
+                  {Math.round((feedback.positive / (feedback.positive + feedback.negative)) * 100)}% useful
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Top Topics */}
       {topTopics.length > 0 && (

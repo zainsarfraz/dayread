@@ -40,6 +40,7 @@ export async function updateSession(request: NextRequest) {
     || request.nextUrl.pathname.startsWith('/stats')
     || request.nextUrl.pathname.startsWith('/settings')
     || request.nextUrl.pathname.startsWith('/bookmarks')
+    || request.nextUrl.pathname.startsWith('/history')
     || request.nextUrl.pathname.startsWith('/onboarding')
 
   if (!user && isProtectedRoute) {

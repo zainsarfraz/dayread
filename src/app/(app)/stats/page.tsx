@@ -8,7 +8,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
 import { userActions, articleClassifications, articles, sources } from '@/db/schema'
-import { eq, and, gte, sql, desc } from 'drizzle-orm'
+import { eq, and, gte, sql, desc, inArray } from 'drizzle-orm'
 import { StatsView } from './stats-view'
 
 export default async function StatsPage() {
@@ -26,7 +26,7 @@ export default async function StatsPage() {
   const twelveWeeksAgo = new Date(now.getTime() - 84 * 24 * 60 * 60 * 1000)
 
   // All queries in parallel
-  const [weeklyActions, monthlyActions, readDates, topTopics, topSources, timeDistribution] =
+  const [weeklyActions, monthlyActions, readDates, topTopics, topSources, timeDistribution, feedbackStats] =
     await Promise.all([
       // Weekly summary
       db
@@ -135,6 +135,21 @@ export default async function StatsPage() {
         )
         .groupBy(sql`extract(hour from ${userActions.createdAt})`)
         .orderBy(sql`extract(hour from ${userActions.createdAt})`),
+
+      // Feedback stats (all time)
+      db
+        .select({
+          action: userActions.action,
+          count: sql<number>`count(*)::int`,
+        })
+        .from(userActions)
+        .where(
+          and(
+            eq(userActions.userId, user.id),
+            inArray(userActions.action, ['feedback_positive', 'feedback_negative']),
+          ),
+        )
+        .groupBy(userActions.action),
     ])
 
   // Compute streak
@@ -197,6 +212,11 @@ export default async function StatsPage() {
     else timePeriods[3].count += count
   }
 
+  const feedback = {
+    positive: feedbackStats.find((f) => f.action === 'feedback_positive')?.count ?? 0,
+    negative: feedbackStats.find((f) => f.action === 'feedback_negative')?.count ?? 0,
+  }
+
   return (
     <StatsView
       streak={{ current: currentStreak, longest: longestStreak }}
@@ -206,6 +226,7 @@ export default async function StatsPage() {
       topTopics={topTopics}
       topSources={topSources}
       timePeriods={timePeriods}
+      feedback={feedback}
     />
   )
 }
