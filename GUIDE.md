@@ -231,7 +231,11 @@ Key Tailwind classes used throughout:
 - `text-text-primary`, `text-text-secondary`, `text-text-tertiary` — text hierarchy
 - `text-accent`, `bg-accent`, `hover:bg-accent-hover` — accent color
 - `border-border` — subtle borders
-- `animate-fade-in`, `animate-slide-left`, etc. — animations
+- `animate-fade-in`, `animate-slide-left`, etc. — dismiss animations
+- `animate-rise` — entrance animation (fade up from 24px, expo easing)
+- `animate-grow` — progress bar growth animation
+- `.stagger` — CSS class that staggers children's rise animation (80ms between each)
+- All animations respect `prefers-reduced-motion`
 
 ## Data Flow Patterns
 
@@ -276,5 +280,4 @@ pnpm db:studio    # Open Drizzle Studio (DB GUI)
 
 - **Daily AI Briefing** — personalized daily digest (see docs/plan-daily-briefing.md)
 - **Mobile responsive** — touch gestures for skip/bookmark
-- **UI polish** — landing page, animations, overall design refinement
 - **Deployment** — GitHub repo, Vercel, CI/CD, cron setup
