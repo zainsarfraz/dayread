@@ -1,8 +1,8 @@
 /**
  * Queue page — the core experience.
  *
- * Shows the user's personalized reading queue sorted by relevance.
- * Top article gets spotlight treatment, rest in a compact list.
+ * On load: populates queue with any new classified articles,
+ * then shows the personalized reading queue sorted by relevance.
  */
 
 export const dynamic = 'force-dynamic'
@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
 import { userQueue, articles, articleClassifications, sources } from '@/db/schema'
 import { eq, and, desc } from 'drizzle-orm'
+import { populateQueueForUser } from '@/lib/scoring/populate-queue'
 import { QueueView } from './queue-view'
 
 export default async function QueuePage() {
@@ -18,6 +19,9 @@ export default async function QueuePage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) return null
+
+  // Populate queue with any new classified articles for this user
+  await populateQueueForUser(user.id)
 
   const queueItems = await db
     .select({

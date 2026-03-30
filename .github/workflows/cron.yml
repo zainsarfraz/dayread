@@ -47,22 +47,3 @@ jobs:
             exit 1
           fi
 
-  populate:
-    runs-on: ubuntu-latest
-    needs: classify
-    steps:
-      - name: Populate user queues
-        run: |
-          response=$(curl -sL -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cron/populate" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            --max-time 120)
-
-          http_code=$(echo "$response" | tail -1)
-          body=$(echo "$response" | head -n -1)
-
-          echo "Populate response ($http_code): $body"
-
-          if [ "$http_code" -ne 200 ]; then
-            echo "::warning::Populate returned $http_code"
-          fi
