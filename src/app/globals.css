@@ -8,17 +8,20 @@
  */
 
 @theme {
-  /* Colors - Dark (primary) */
-  --color-bg: #0A0A0C;
-  --color-surface: #141418;
-  --color-surface-hover: #1C1C22;
-  --color-border: #2A2A32;
+  /* Colors - Dark (primary) — cinematic dark, not pure black */
+  --color-bg: #050506;
+  --color-surface: #0F0F12;
+  --color-surface-hover: #18181E;
+  --color-surface-raised: #1E1E26;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
   --color-text-primary: #EDEDEF;
-  --color-text-secondary: #8B8B96;
-  --color-text-tertiary: #56565F;
-  --color-accent: #E8915A;
-  --color-accent-hover: #F0A06E;
-  --color-accent-muted: rgba(232, 145, 90, 0.15);
+  --color-text-secondary: #8A8F98;
+  --color-text-tertiary: #4E535C;
+  --color-accent: #D97706;
+  --color-accent-hover: #E88A0E;
+  --color-accent-muted: rgba(217, 119, 6, 0.12);
+  --color-accent-subtle: rgba(217, 119, 6, 0.06);
   --color-success: #4ADE80;
   --color-skip: #64748B;
 
@@ -80,19 +83,22 @@
 /* Light mode overrides */
 @media (prefers-color-scheme: light) {
   :root {
-    --color-bg: #FAFAF9;
+    --color-bg: #FAFAF8;
     --color-surface: #FFFFFF;
-    --color-surface-hover: #F5F5F3;
-    --color-border: #E8E8E4;
-    --color-text-primary: #1A1A1E;
-    --color-text-secondary: #6B6B73;
-    --color-text-tertiary: #9B9BA3;
-    --color-accent: #D4783E;
-    --color-accent-hover: #C06A30;
-    --color-accent-muted: rgba(212, 120, 62, 0.12);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --color-surface-hover: #F5F5F2;
+    --color-surface-raised: #F0F0ED;
+    --color-border: rgba(0, 0, 0, 0.08);
+    --color-border-strong: rgba(0, 0, 0, 0.14);
+    --color-text-primary: #0F172A;
+    --color-text-secondary: #64748B;
+    --color-text-tertiary: #94A3B8;
+    --color-accent: #B45309;
+    --color-accent-hover: #A3480D;
+    --color-accent-muted: rgba(180, 83, 9, 0.1);
+    --color-accent-subtle: rgba(180, 83, 9, 0.05);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 }
 

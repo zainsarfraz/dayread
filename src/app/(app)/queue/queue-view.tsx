@@ -64,25 +64,22 @@ export function QueueView({ items, userName }: { items: QueueItem[]; userName: s
   const rest = queue.slice(1)
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-text-primary">
-          Good {getTimeOfDay()}, {userName}.
-        </h1>
-        <p className="mt-1 text-text-secondary">
-          {queue.length > 0
-            ? `You have ${queue.length} article${queue.length === 1 ? '' : 's'} today.`
-            : 'Your queue is empty. Check back later!'}
+      <div className="mb-10">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          {getTimeOfDay()}
         </p>
+        <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
+          {queue.length > 0
+            ? `${queue.length} articles for you`
+            : 'All caught up'}
+        </h1>
       </div>
 
       {/* Spotlight card */}
       {spotlight && (
-        <div className="mb-8">
-          <p className="mb-3 text-xs font-medium uppercase tracking-wider text-accent">
-            Today&apos;s pick
-          </p>
+        <div className="mb-10">
           <SpotlightCard
             item={spotlight}
             dismissState={dismissing[spotlight.queueId]}
@@ -94,7 +91,8 @@ export function QueueView({ items, userName }: { items: QueueItem[]; userName: s
       {/* Rest of queue */}
       {rest.length > 0 && (
         <div>
-          <p className="mb-4 text-xs font-medium uppercase tracking-wider text-text-tertiary">
+          <div className="mb-5 h-px bg-border" />
+          <p className="mb-5 text-xs font-medium uppercase tracking-[0.15em] text-text-tertiary">
             Up next
           </p>
           <div className="flex flex-col gap-3">
@@ -136,53 +134,49 @@ function SpotlightCard({
   return (
     <div
       className={clsx(
-        'rounded-lg border border-accent/20 bg-surface p-6 transition-all',
+        'rounded-xl border border-border bg-surface p-6 transition-all sm:p-8',
         dismissState === 'skip' && 'animate-slide-left',
         dismissState === 'bookmark' && 'animate-slide-right',
       )}
     >
-      <div className="mb-3 flex items-center gap-2">
+      <div className="flex items-center gap-2 text-xs text-text-tertiary">
         <SourceBadge name={item.sourceName} iconUrl={item.sourceIcon} />
-        <span className="text-xs text-text-tertiary">
-          {formatTimeAgo(item.publishedAt)}
-        </span>
+        <span>·</span>
+        <span>{formatTimeAgo(item.publishedAt)}</span>
       </div>
 
-      <h2 className="text-xl font-semibold leading-tight text-text-primary">
+      <h2 className="mt-4 font-serif text-2xl font-medium leading-snug text-text-primary sm:text-[1.75rem]">
         {item.title}
       </h2>
 
-      <p className="mt-2 leading-relaxed text-text-secondary">
+      <p className="mt-3 text-[0.95rem] leading-relaxed text-text-secondary">
         {item.hook}
       </p>
 
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {item.tags.map((tag) => (
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {item.tags.slice(0, 3).map((tag) => (
           <TagPill key={tag} tag={tag} />
         ))}
       </div>
 
-      <div className="mt-5 flex items-center gap-2">
+      <div className="mt-6 flex items-center gap-2">
         <button
           onClick={() => onAction('read')}
-          className="inline-flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
         >
-          <Check className="h-4 w-4" />
           Read
         </button>
         <button
           onClick={() => onAction('bookmark')}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2.5 text-sm text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
         >
           <Bookmark className="h-4 w-4" />
-          Bookmark
         </button>
         <button
           onClick={() => onAction('skip')}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2.5 text-sm text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
         >
           <X className="h-4 w-4" />
-          Skip
         </button>
       </div>
     </div>
@@ -203,50 +197,46 @@ function CompactCard({
   return (
     <div
       className={clsx(
-        'group flex items-start gap-4 rounded-lg border border-border bg-surface p-4 transition-all hover:border-border hover:bg-surface-hover',
+        'group flex items-start gap-4 rounded-xl border border-border bg-surface px-5 py-4 transition-all hover:bg-surface-hover',
         dismissState === 'skip' && 'animate-slide-left',
         dismissState === 'bookmark' && 'animate-slide-right',
       )}
     >
-      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-hover text-xs font-medium text-text-tertiary">
+      <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center font-mono text-xs text-text-tertiary">
         {position}
       </span>
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2 text-xs text-text-tertiary">
+        <h3 className="font-medium leading-snug text-text-primary">
+          {item.title}
+        </h3>
+
+        <div className="mt-1.5 flex items-center gap-2 text-xs text-text-tertiary">
           <span>{item.sourceName}</span>
           <span>·</span>
           <span>{formatTimeAgo(item.publishedAt)}</span>
         </div>
-
-        <h3 className="mt-1 font-medium leading-snug text-text-primary">
-          {item.title}
-        </h3>
-
-        <p className="mt-1 text-sm text-text-secondary line-clamp-1">
-          {item.hook}
-        </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
         <button
           onClick={() => onAction('read')}
           title="Read"
-          className="rounded-md p-1.5 text-text-tertiary transition-colors hover:bg-accent/10 hover:text-accent"
+          className="cursor-pointer rounded-md p-1.5 text-text-tertiary transition-colors hover:text-accent"
         >
           <Check className="h-4 w-4" />
         </button>
         <button
           onClick={() => onAction('bookmark')}
           title="Bookmark"
-          className="rounded-md p-1.5 text-text-tertiary transition-colors hover:bg-accent/10 hover:text-accent"
+          className="cursor-pointer rounded-md p-1.5 text-text-tertiary transition-colors hover:text-accent"
         >
           <Bookmark className="h-4 w-4" />
         </button>
         <button
           onClick={() => onAction('skip')}
           title="Skip"
-          className="rounded-md p-1.5 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary"
+          className="cursor-pointer rounded-md p-1.5 text-text-tertiary transition-colors hover:text-text-secondary"
         >
           <X className="h-4 w-4" />
         </button>

@@ -1,101 +1,102 @@
 /**
- * Landing page — shown to non-authenticated visitors.
+ * Landing page — first impression.
  *
- * Minimal, warm, inviting. One clear CTA.
+ * Exaggerated minimalism: oversized typography, massive whitespace,
+ * warm accent, editorial feel. Content-first, not SaaS-template.
  */
 
 import Link from 'next/link'
-import { Zap, Clock, Brain } from 'lucide-react'
 
 export default function LandingPage() {
   return (
-    <main className="flex min-h-dvh flex-col">
+    <main className="min-h-dvh bg-bg">
       {/* Nav */}
-      <header className="flex items-center justify-between px-6 py-5 sm:px-8">
-        <span className="text-lg font-semibold text-text-primary">dayread</span>
+      <header className="flex items-center justify-between px-6 py-6 sm:px-10">
+        <span className="text-base font-semibold tracking-tight text-text-primary">dayread</span>
         <Link
           href="/auth/login"
-          className="rounded-md border border-border px-4 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
+          className="rounded-md px-4 py-1.5 text-sm text-text-tertiary transition-colors hover:text-text-secondary"
         >
           Sign in
         </Link>
       </header>
 
       {/* Hero */}
-      <div className="flex flex-1 flex-col items-center justify-center px-6 pb-24">
-        <div className="max-w-xl text-center">
-          {/* Accent dot */}
-          <div className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-accent-muted">
-            <div className="h-3 w-3 rounded-full bg-accent" />
-          </div>
+      <section className="mx-auto max-w-3xl px-6 pb-32 pt-24 sm:px-10 sm:pt-32">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          AI-powered reading
+        </p>
 
-          <h1 className="text-4xl font-semibold leading-[1.15] tracking-tight text-text-primary sm:text-5xl">
-            Stay sharp on AI & tech.
-            <br />
-            <span className="text-text-secondary">Without the noise.</span>
-          </h1>
+        <h1 className="mt-4 font-serif text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[1.08] tracking-tight text-text-primary">
+          The tech news
+          <br />
+          that matters to
+          <br />
+          <span className="text-text-tertiary">you</span>.
+        </h1>
 
-          <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-text-secondary">
-            Dayread pulls from the best sources, scores what matters to you,
-            and serves it one article at a time. Read the gist in 2 minutes,
-            or dive into the original.
-          </p>
+        <p className="mt-6 max-w-md text-base leading-relaxed text-text-secondary">
+          10 sources. AI classification. A queue that learns
+          what you care about. Read the gist in two minutes
+          or dive into the original.
+        </p>
 
+        <div className="mt-10 flex items-center gap-4">
           <Link
             href="/auth/login"
-            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-accent px-7 py-3 text-sm font-medium text-white shadow-md transition-all hover:bg-accent-hover hover:shadow-lg"
+            className="rounded-lg bg-accent px-6 py-3 text-sm font-medium text-white transition-all hover:bg-accent-hover"
           >
-            Get started — it&apos;s free
+            Start reading
           </Link>
+          <span className="text-sm text-text-tertiary">Free, no credit card</span>
         </div>
 
-        {/* Features */}
-        <div className="mt-20 grid max-w-2xl grid-cols-1 gap-6 sm:grid-cols-3">
-          <Feature
-            icon={Zap}
-            title="AI-curated queue"
-            description="10 sources polled, every article classified and scored for you"
-          />
-          <Feature
-            icon={Clock}
-            title="Paced for humans"
-            description="No infinite feed. Read one thing, mark it done, move on"
-          />
-          <Feature
-            icon={Brain}
-            title="Learns your taste"
-            description="Every read, skip, and bookmark trains your personal scoring"
-          />
+        {/* Visual separator */}
+        <div className="mt-20 h-px bg-border" />
+
+        {/* How it works */}
+        <div className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-3">
+          <Step number="01" title="We pull">
+            Hacker News, ArXiv, HuggingFace, TechCrunch, Reddit
+            and more — polled every 2 hours.
+          </Step>
+          <Step number="02" title="AI scores">
+            Every article gets classified, tagged, and ranked
+            by importance. One batch, zero per-user cost.
+          </Step>
+          <Step number="03" title="You read">
+            Your queue learns from every read, skip, and bookmark.
+            Tomorrow&apos;s queue is smarter than today&apos;s.
+          </Step>
         </div>
 
-        {/* Source logos hint */}
-        <div className="mt-16 text-center">
-          <p className="text-xs uppercase tracking-widest text-text-tertiary">Sources include</p>
-          <p className="mt-2 text-sm text-text-secondary">
-            Hacker News · ArXiv · HuggingFace · TechCrunch · Reddit · Simon Willison · and more
+        <div className="mt-20 h-px bg-border" />
+
+        {/* Sources */}
+        <div className="mt-16">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-text-tertiary">
+            Sources
           </p>
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-secondary">
+            {[
+              'Hacker News', 'ArXiv', 'HuggingFace', 'TechCrunch',
+              'Reddit', 'Simon Willison', 'The Decoder', 'DeepMind',
+            ].map((s) => (
+              <span key={s}>{s}</span>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
     </main>
   )
 }
 
-function Feature({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: typeof Zap
-  title: string
-  description: string
-}) {
+function Step({ number, title, children }: { number: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="text-center">
-      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-surface">
-        <Icon className="h-5 w-5 text-accent" />
-      </div>
-      <h3 className="text-sm font-medium text-text-primary">{title}</h3>
-      <p className="mt-1 text-sm leading-relaxed text-text-tertiary">{description}</p>
+    <div>
+      <span className="font-mono text-xs text-accent">{number}</span>
+      <h3 className="mt-1 text-base font-medium text-text-primary">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-text-secondary">{children}</p>
     </div>
   )
 }
