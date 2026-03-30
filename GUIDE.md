@@ -276,8 +276,40 @@ pnpm db:migrate   # Run migrations
 pnpm db:studio    # Open Drizzle Studio (DB GUI)
 ```
 
+## CI/CD & Cron
+
+### GitHub Actions Workflows
+
+```
+.github/workflows/
+├── ci.yml        — Runs on PRs: typecheck + lint
+└── cron.yml      — Runs every 2 hours: poll sources → classify → populate queues
+                    Also manually triggerable via workflow_dispatch
+```
+
+### Cron Flow (Production)
+
+```
+GitHub Actions (every 2h)
+  → POST /api/cron/poll (fetches articles from all sources)
+  → POST /api/cron/classify (AI classifies + populates all user queues)
+```
+
+### Required GitHub Secrets
+
+```
+APP_URL        — Vercel deployment URL (e.g., https://dayread.vercel.app)
+CRON_SECRET    — Same secret as in Vercel env vars
+```
+
+## Git Workflow
+
+- Branch from `main` for every feature (`feat/feature-name`)
+- PR against `main`, CI must pass
+- Squash-merge in GitHub UI
+- Never push directly to `main`
+
 ## Not Yet Built
 
 - **Daily AI Briefing** — personalized daily digest (see docs/plan-daily-briefing.md)
 - **Mobile responsive** — touch gestures for skip/bookmark
-- **Deployment** — GitHub repo, Vercel, CI/CD, cron setup

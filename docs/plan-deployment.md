@@ -1,15 +1,17 @@
 # Plan: Deployment
 
-## Status: Not Started
+## Status: Complete
 
-- [ ] Create GitHub repository
-- [ ] Push code to GitHub
-- [ ] Deploy to Vercel
-- [ ] Set environment variables in Vercel
-- [ ] Create GitHub Actions cron workflow
-- [ ] Create CI pipeline (typecheck + lint)
-- [ ] Update Supabase + Google OAuth redirect URLs
-- [ ] Custom domain (optional)
+- [x] Create GitHub repository (github.com/zainsarfraz/dayread)
+- [x] Push code to GitHub
+- [x] Create GitHub Actions cron workflow (.github/workflows/cron.yml)
+- [x] Create CI pipeline (.github/workflows/ci.yml)
+- [x] Deploy to Vercel (dayread.vercel.app)
+- [x] Set environment variables in Vercel
+- [x] Set GitHub Actions secrets (APP_URL, CRON_SECRET)
+- [x] Update Supabase redirect URLs with Vercel URL
+- [x] Update Google OAuth redirect URIs with Vercel URL
+- [ ] Custom domain (optional, future)
 
 ## Goal
 
