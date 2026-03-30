@@ -1,5 +1,15 @@
 # Plan: Stats & Analytics
 
+## Status: Complete
+
+- [x] Reading streak with contribution grid (12 weeks)
+- [x] This week / this month summary cards
+- [x] Top topics bar chart (from read article tags)
+- [x] Top sources bar chart
+- [x] Reading time distribution (morning/afternoon/evening/night)
+- [x] Feedback stats (useful/not useful counts + percentage)
+- [x] Progress bars with grow animation
+
 ## Goal
 
 Track user reading behavior and display insightful statistics. Help users understand

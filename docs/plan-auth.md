@@ -1,5 +1,14 @@
 # Plan: Authentication
 
+## Status: Complete
+
+- [x] Google OAuth via Supabase Auth
+- [x] Login page with Google sign-in button
+- [x] OAuth callback with new user detection
+- [x] Middleware route protection + session refresh
+- [x] Server + browser Supabase clients
+- [x] Redirect: new users → onboarding, returning → queue
+
 ## Goal
 
 Google OAuth sign-in via Supabase Auth. Users sign in, get a profile, and access

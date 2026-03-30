@@ -1,5 +1,15 @@
 # Plan: Content Ingestion
 
+## Status: Complete
+
+- [x] RSS adapter (generic, handles 7 sources)
+- [x] Hacker News adapter (Firebase API, score > 100)
+- [x] HuggingFace Daily Papers adapter
+- [x] Reddit adapter (r/LocalLLaMA, score > 50)
+- [x] URL normalization for deduplication
+- [x] Poll cron endpoint with CRON_SECRET protection
+- [x] 10 sources seeded and tested
+
 ## Goal
 
 Poll RSS feeds and APIs on a schedule, fetch new articles, deduplicate, and store

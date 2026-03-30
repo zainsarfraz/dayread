@@ -1,5 +1,16 @@
 # Plan: Queue & Personalization
 
+## Status: 95% Built
+
+- [x] Scoring formula (tag weights x global score x recency)
+- [x] Queue population after classification (all users)
+- [x] Queue population on onboarding (single user)
+- [x] Queue recalculation when settings change
+- [x] Preference learning (read +2, bookmark +5, skip -1, deep read +1)
+- [x] Onboarding page with 8 interest categories
+- [x] Action API (read, skip, bookmark, unbookmark, feedback)
+- [ ] Queue cleanup job (auto-archive 14+ day old pending items)
+
 ## Goal
 
 Each user gets a personalized reading queue sorted by relevance to their interests.

@@ -1,5 +1,14 @@
 # Plan: AI Pipeline
 
+## Status: Complete
+
+- [x] Pass 1: Batch classification (Gemini 3 Flash Preview)
+- [x] Pass 2: On-demand summarization with caching
+- [x] Classification cron endpoint
+- [x] Summarize API endpoint (auth-protected)
+- [x] JSON structured output, retry-safe
+- [x] Auto-populates user queues after classification
+
 ## Goal
 
 Two-pass AI system: (1) batch classify new articles after polling, (2) generate

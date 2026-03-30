@@ -1,5 +1,14 @@
 # Plan: Database
 
+## Status: 85% Built
+
+- [x] Drizzle schema (8 tables, all indexes)
+- [x] Database client (postgres.js driver)
+- [x] Seed script (10 sources)
+- [x] Schema pushed to Supabase
+- [ ] RLS policies (not yet configured)
+- [ ] Supabase MCP integration
+
 ## Goal
 
 Set up Supabase PostgreSQL with Drizzle ORM. Define the schema for articles, users,

@@ -1,5 +1,22 @@
 # Plan: UI Design
 
+## Status: 90% Built
+
+- [x] Design system (dark-first, warm amber accent, Tailwind v4)
+- [x] Landing page (editorial style, staggered animations)
+- [x] Login page (Google OAuth, accent branding)
+- [x] Queue page (spotlight + compact cards, entrance animations)
+- [x] Article detail (serif title, AI summary, feedback, mark-as-read)
+- [x] Bookmarks page
+- [x] History page
+- [x] Stats page (streak grid, charts, progress bars)
+- [x] Settings page (preference sliders, source toggles)
+- [x] Onboarding page (interest selection cards)
+- [x] Nav bar (desktop + mobile hamburger, sticky, backdrop blur)
+- [x] Animations (rise, stagger, grow, fade-in, reduced-motion)
+- [ ] Mobile responsive testing
+- [ ] Component extraction (reusable primitives)
+
 ## Goal
 
 A minimal, modern, and unique reading interface that doesn't look AI-generated.

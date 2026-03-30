@@ -1,5 +1,16 @@
 # Plan: Deployment
 
+## Status: Not Started
+
+- [ ] Create GitHub repository
+- [ ] Push code to GitHub
+- [ ] Deploy to Vercel
+- [ ] Set environment variables in Vercel
+- [ ] Create GitHub Actions cron workflow
+- [ ] Create CI pipeline (typecheck + lint)
+- [ ] Update Supabase + Google OAuth redirect URLs
+- [ ] Custom domain (optional)
+
 ## Goal
 
 Deploy the app reliably with automated cron jobs for content polling and classification.
