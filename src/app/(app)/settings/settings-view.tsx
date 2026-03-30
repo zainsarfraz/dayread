@@ -79,11 +79,13 @@ export function SettingsView({
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-text-primary">Settings</h1>
-          <p className="mt-1 text-sm text-text-secondary">Manage your preferences</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">Preferences</p>
+          <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
+            Settings
+          </h1>
         </div>
         <button
           onClick={handleSave}
@@ -104,7 +106,7 @@ export function SettingsView({
       </div>
 
       {/* Profile */}
-      <div className="mt-8 rounded-lg border border-border bg-surface p-5">
+      <div className="mt-8 rounded-xl border border-border bg-surface p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
           Account
         </h2>
@@ -129,7 +131,7 @@ export function SettingsView({
       </div>
 
       {/* Interest Preferences */}
-      <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+      <div className="mt-6 rounded-xl border border-border bg-surface p-5">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
@@ -175,7 +177,7 @@ export function SettingsView({
       </div>
 
       {/* Sources */}
-      <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+      <div className="mt-6 rounded-xl border border-border bg-surface p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
           Sources
         </h2>
@@ -216,7 +218,7 @@ export function SettingsView({
       </div>
 
       {/* Sign Out */}
-      <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+      <div className="mt-6 rounded-xl border border-border bg-surface p-5">
         <button
           onClick={handleSignOut}
           className="inline-flex items-center gap-2 text-sm text-text-secondary transition-colors hover:text-text-primary"

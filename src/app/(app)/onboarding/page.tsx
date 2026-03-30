@@ -130,11 +130,14 @@ export default function OnboardingPage() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center px-4 py-12">
       <div className="max-w-xl text-center">
-        <h1 className="text-3xl font-semibold text-text-primary">
-          What are you interested in?
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          Personalize
+        </p>
+        <h1 className="mt-3 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
+          What interests you?
         </h1>
-        <p className="mt-2 text-text-secondary">
-          Pick a few topics to personalize your queue. You can always change these later.
+        <p className="mt-3 text-sm text-text-secondary">
+          Pick a few topics to shape your queue. You can always adjust these later in settings.
         </p>
       </div>
 
@@ -147,7 +150,7 @@ export default function OnboardingPage() {
               key={option.id}
               onClick={() => toggle(option.id)}
               className={clsx(
-                'flex items-start gap-3 rounded-lg border p-4 text-left transition-all',
+                'flex items-start gap-3 rounded-xl border p-4 text-left transition-all',
                 isSelected
                   ? 'border-accent bg-accent-muted'
                   : 'border-border bg-surface hover:bg-surface-hover',
@@ -183,7 +186,7 @@ export default function OnboardingPage() {
         <button
           onClick={handleContinue}
           disabled={saving}
-          className="rounded-md bg-accent px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
+          className="rounded-lg bg-accent px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
         >
           {saving ? 'Setting up...' : `Continue${selected.size > 0 ? ` (${selected.size} selected)` : ''}`}
         </button>

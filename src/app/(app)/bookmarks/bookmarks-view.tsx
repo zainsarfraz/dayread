@@ -1,7 +1,5 @@
 /**
  * Client-side bookmarks view.
- *
- * Shows bookmarked articles with option to remove bookmark or read.
  */
 
 'use client'
@@ -49,21 +47,21 @@ export function BookmarksView({ items }: { items: BookmarkItem[] }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-semibold text-text-primary">Bookmarks</h1>
-      <p className="mt-1 text-sm text-text-secondary">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
+      <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">Saved</p>
+      <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
         {bookmarks.length > 0
-          ? `${bookmarks.length} saved article${bookmarks.length === 1 ? '' : 's'}`
-          : 'No bookmarks yet'}
-      </p>
+          ? `${bookmarks.length} bookmark${bookmarks.length === 1 ? '' : 's'}`
+          : 'No bookmarks'}
+      </h1>
 
       {bookmarks.length > 0 && (
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="mt-8 flex flex-col gap-3">
           {bookmarks.map((item) => (
             <div
               key={item.queueId}
               className={clsx(
-                'group rounded-lg border border-border bg-surface p-4 transition-all',
+                'group rounded-xl border border-border bg-surface px-5 py-4 transition-all',
                 removing.has(item.queueId) && 'animate-slide-left',
               )}
             >
@@ -74,24 +72,24 @@ export function BookmarksView({ items }: { items: BookmarkItem[] }) {
                 )}
                 <span>{item.sourceName}</span>
                 <span>·</span>
-                <span>{formatTimeAgo(item.actedAt)}</span>
+                <span>Saved {formatTimeAgo(item.actedAt)}</span>
               </div>
 
               <Link
                 href={`/article/${item.articleId}`}
-                className="mt-2 block font-medium leading-snug text-text-primary hover:text-accent transition-colors"
+                className="mt-2 block font-medium leading-snug text-text-primary transition-colors hover:text-accent"
               >
                 {item.title}
               </Link>
 
-              <p className="mt-1 text-sm text-text-secondary line-clamp-2">
+              <p className="mt-1 text-sm text-text-secondary line-clamp-1">
                 {item.hook}
               </p>
 
               <div className="mt-3 flex items-center gap-2">
                 <Link
                   href={`/article/${item.articleId}`}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
                 >
                   Read
                 </Link>
@@ -99,14 +97,14 @@ export function BookmarksView({ items }: { items: BookmarkItem[] }) {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
                 >
                   <ExternalLink className="h-3 w-3" />
                   Original
                 </a>
                 <button
                   onClick={() => handleRemove(item.queueId, item.articleId)}
-                  className="ml-auto inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary"
+                  className="ml-auto inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-text-tertiary transition-colors hover:text-text-secondary"
                 >
                   <BookmarkX className="h-3.5 w-3.5" />
                   Remove
@@ -118,12 +116,9 @@ export function BookmarksView({ items }: { items: BookmarkItem[] }) {
       )}
 
       {bookmarks.length === 0 && (
-        <div className="flex flex-col items-center py-20 text-center">
-          <Bookmark className="mb-4 h-10 w-10 text-text-tertiary" />
-          <p className="text-lg text-text-secondary">No bookmarks yet</p>
-          <p className="mt-1 text-sm text-text-tertiary">
-            Bookmark articles from your queue to save them here.
-          </p>
+        <div className="mt-16 text-center">
+          <Bookmark className="mx-auto mb-4 h-10 w-10 text-text-tertiary" />
+          <p className="text-text-secondary">Bookmark articles from your queue to save them here.</p>
         </div>
       )}
     </div>

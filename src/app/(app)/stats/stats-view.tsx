@@ -31,12 +31,14 @@ export function StatsView({
   feedback,
 }: StatsProps) {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-semibold text-text-primary">Stats</h1>
-      <p className="mt-1 text-sm text-text-secondary">Your reading habits at a glance</p>
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
+      <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">Analytics</p>
+      <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
+        Reading habits
+      </h1>
 
       {/* Streak */}
-      <div className="mt-8 rounded-lg border border-border bg-surface p-5">
+      <div className="mt-8 rounded-xl border border-border bg-surface p-5">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-muted">
             <Flame className="h-5 w-5 text-accent" />
@@ -91,7 +93,7 @@ export function StatsView({
 
       {/* Feedback */}
       {(feedback.positive > 0 || feedback.negative > 0) && (
-        <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+        <div className="mt-6 rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
             Article Feedback
           </h2>
@@ -127,7 +129,7 @@ export function StatsView({
 
       {/* Top Topics */}
       {topTopics.length > 0 && (
-        <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+        <div className="mt-6 rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
             Top Topics
           </h2>
@@ -157,7 +159,7 @@ export function StatsView({
 
       {/* Top Sources */}
       {topSources.length > 0 && (
-        <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+        <div className="mt-6 rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
             Top Sources
           </h2>
@@ -187,7 +189,7 @@ export function StatsView({
 
       {/* Reading Time Distribution */}
       {timePeriods.some((p) => p.count > 0) && (
-        <div className="mt-6 rounded-lg border border-border bg-surface p-5">
+        <div className="mt-6 rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
             When You Read
           </h2>

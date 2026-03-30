@@ -23,21 +23,21 @@ type HistoryItem = {
 
 export function HistoryView({ items }: { items: HistoryItem[] }) {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-semibold text-text-primary">History</h1>
-      <p className="mt-1 text-sm text-text-secondary">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
+      <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">Read</p>
+      <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
         {items.length > 0
           ? `${items.length} article${items.length === 1 ? '' : 's'} read`
-          : 'No articles read yet'}
-      </p>
+          : 'No history'}
+      </h1>
 
       {items.length > 0 && (
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="mt-8 flex flex-col gap-3">
           {items.map((item) => (
             <Link
               key={item.queueId}
               href={`/article/${item.articleId}`}
-              className="group rounded-lg border border-border bg-surface p-4 transition-all hover:bg-surface-hover"
+              className="group rounded-xl border border-border bg-surface px-5 py-4 transition-all hover:bg-surface-hover"
             >
               <div className="flex items-center gap-2 text-xs text-text-tertiary">
                 {item.sourceIcon && (
@@ -49,7 +49,7 @@ export function HistoryView({ items }: { items: HistoryItem[] }) {
                 <span>Read {formatTimeAgo(item.actedAt)}</span>
               </div>
 
-              <h3 className="mt-2 font-medium leading-snug text-text-primary group-hover:text-accent transition-colors">
+              <h3 className="mt-2 font-medium leading-snug text-text-primary transition-colors group-hover:text-accent">
                 {item.title}
               </h3>
 
@@ -62,12 +62,9 @@ export function HistoryView({ items }: { items: HistoryItem[] }) {
       )}
 
       {items.length === 0 && (
-        <div className="flex flex-col items-center py-20 text-center">
-          <BookOpen className="mb-4 h-10 w-10 text-text-tertiary" />
-          <p className="text-lg text-text-secondary">No reading history yet</p>
-          <p className="mt-1 text-sm text-text-tertiary">
-            Articles you mark as read will appear here.
-          </p>
+        <div className="mt-16 text-center">
+          <BookOpen className="mx-auto mb-4 h-10 w-10 text-text-tertiary" />
+          <p className="text-text-secondary">Articles you mark as read will appear here.</p>
         </div>
       )}
     </div>

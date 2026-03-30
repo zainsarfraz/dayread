@@ -1,8 +1,5 @@
 /**
  * Client-side article view with on-demand summary generation.
- *
- * If no cached summary exists, fetches one from the AI endpoint.
- * Tracks time spent for preference learning.
  */
 
 'use client'
@@ -45,10 +42,8 @@ export function ArticleView({
   const [markedRead, setMarkedRead] = useState(queueStatus === 'read')
   const startTime = useRef(Date.now())
 
-  // Generate summary on demand if not cached
   useEffect(() => {
     if (article.summary) return
-
     const generateSummary = async () => {
       setLoading(true)
       try {
@@ -66,11 +61,9 @@ export function ArticleView({
         setLoading(false)
       }
     }
-
     generateSummary()
   }, [article.id, article.summary])
 
-  // Log view action on mount
   useEffect(() => {
     fetch('/api/action', {
       method: 'POST',
@@ -81,56 +74,67 @@ export function ArticleView({
   }, [])
 
   return (
-    <div className="mx-auto max-w-[680px] px-4 py-8 sm:px-6">
-      {/* Back link */}
+    <div className="mx-auto max-w-[680px] px-4 py-10 sm:px-6">
+      {/* Back */}
       <Link
         href="/queue"
-        className="mb-8 inline-flex items-center gap-1.5 text-sm text-text-tertiary transition-colors hover:text-text-secondary"
+        className="mb-10 inline-flex items-center gap-1.5 text-sm text-text-tertiary transition-colors hover:text-text-secondary"
       >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Queue
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Queue
       </Link>
 
-      {/* Source badge */}
-      <div className="mb-4 flex items-center gap-2">
+      {/* Source + meta */}
+      <div className="flex items-center gap-2 text-xs text-text-tertiary">
         {article.sourceIcon && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={article.sourceIcon} alt="" className="h-5 w-5 rounded-full" />
+          <img src={article.sourceIcon} alt="" className="h-4 w-4 rounded-full" />
         )}
-        <span className="text-sm font-medium text-text-secondary">{article.sourceName}</span>
-      </div>
-
-      {/* Title */}
-      <h1 className="font-serif text-3xl font-semibold leading-tight text-text-primary">
-        {article.title}
-      </h1>
-
-      {/* Metadata */}
-      <div className="mt-3 flex items-center gap-2 text-sm text-text-tertiary">
+        <span>{article.sourceName}</span>
         {article.publishedAt && (
-          <time>{formatDate(article.publishedAt)}</time>
+          <>
+            <span>·</span>
+            <time>{formatDate(article.publishedAt)}</time>
+          </>
         )}
         <span>·</span>
         <span className="capitalize">{article.category}</span>
       </div>
 
+      {/* Title */}
+      <h1 className="mt-4 font-serif text-[clamp(1.75rem,4vw,2.5rem)] font-medium leading-[1.15] tracking-tight text-text-primary">
+        {article.title}
+      </h1>
+
+      {/* Tags */}
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {article.tags.slice(0, 4).map((tag) => (
+          <span
+            key={tag}
+            className="rounded-md bg-surface-hover px-2 py-0.5 font-mono text-xs text-text-tertiary"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
       {/* Divider */}
-      <hr className="my-6 border-border" />
+      <div className="my-8 h-px bg-border" />
 
       {/* Summary */}
       {loading ? (
-        <div className="flex items-center gap-3 py-12 text-text-secondary">
-          <Loader2 className="h-5 w-5 animate-spin" />
+        <div className="flex items-center gap-3 py-16 text-text-secondary">
+          <Loader2 className="h-4 w-4 animate-spin text-accent" />
           <span className="text-sm">Generating summary...</span>
         </div>
       ) : (
         <div className="prose-article">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-accent">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
             AI Summary
           </p>
 
           {summary && (
-            <div className="space-y-4 text-text-primary">
+            <div className="space-y-5 text-text-primary">
               {summary.split('\n\n').map((paragraph, i) => (
                 <p key={i} className="animate-fade-in" style={{ animationDelay: `${i * 100}ms` }}>
                   {paragraph}
@@ -140,19 +144,19 @@ export function ArticleView({
           )}
 
           {keyPoints && keyPoints.length > 0 && (
-            <div className="mt-8">
-              <h2 className="mb-3 font-sans text-sm font-semibold uppercase tracking-wider text-text-secondary">
+            <div className="mt-10">
+              <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-text-tertiary">
                 Key Takeaways
-              </h2>
-              <ul className="space-y-2">
+              </p>
+              <ul className="space-y-3">
                 {keyPoints.map((point, i) => (
                   <li
                     key={i}
-                    className="flex gap-2 text-text-primary animate-fade-in"
+                    className="flex gap-3 animate-fade-in"
                     style={{ animationDelay: `${(i + 3) * 100}ms` }}
                   >
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{point}</span>
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    <span className="text-text-primary">{point}</span>
                   </li>
                 ))}
               </ul>
@@ -162,7 +166,7 @@ export function ArticleView({
       )}
 
       {/* Divider */}
-      <hr className="my-8 border-border" />
+      <div className="my-8 h-px bg-border" />
 
       {/* Actions */}
       <div className="flex items-center gap-3">
@@ -170,7 +174,7 @@ export function ArticleView({
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-hover"
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-hover"
         >
           <ExternalLink className="h-4 w-4" />
           Read full article
@@ -192,7 +196,7 @@ export function ArticleView({
                 }),
               })
             }}
-            className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
           >
             <Check className="h-4 w-4" />
             Mark as Read
@@ -219,7 +223,6 @@ function FeedbackSection({ articleId, initial }: { articleId: string; initial: '
   const handleClick = (value: 'up' | 'down') => {
     const newValue = feedback === value ? null : value
     setFeedback(newValue)
-
     fetch('/api/action', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -235,29 +238,31 @@ function FeedbackSection({ articleId, initial }: { articleId: string; initial: '
   }
 
   return (
-    <div className="mt-8 border-t border-border pt-6">
-      <p className="mb-3 text-sm text-text-secondary">Was this useful?</p>
+    <div className="mt-10 border-t border-border pt-6">
+      <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-text-tertiary">
+        Was this useful?
+      </p>
       <div className="flex gap-2">
         <button
           onClick={() => handleClick('up')}
-          className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+          className={`cursor-pointer inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors ${
             feedback === 'up'
               ? 'border-accent/30 bg-accent-muted text-accent'
               : 'border-border text-text-tertiary hover:bg-surface-hover hover:text-text-secondary'
           }`}
         >
-          <ThumbsUp className="h-4 w-4" />
+          <ThumbsUp className="h-3.5 w-3.5" />
           Yes
         </button>
         <button
           onClick={() => handleClick('down')}
-          className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+          className={`cursor-pointer inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors ${
             feedback === 'down'
               ? 'border-accent/30 bg-accent-muted text-accent'
               : 'border-border text-text-tertiary hover:bg-surface-hover hover:text-text-secondary'
           }`}
         >
-          <ThumbsDown className="h-4 w-4" />
+          <ThumbsDown className="h-3.5 w-3.5" />
           No
         </button>
       </div>
