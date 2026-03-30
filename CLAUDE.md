@@ -15,6 +15,8 @@ not in DOING (adding files, abstractions, or configuration).
 ## Critical Restrictions
 
 - **NEVER push directly to `main`.** All changes go through Pull Requests.
+- **NEVER push or create PRs without asking the user first.** Always confirm before
+  running `git push`, `gh pr create`, or any action that affects the remote repository.
 - **NEVER create README or documentation files** unless explicitly asked.
 - **NEVER skip pre-commit or pre-push hooks.** Fix issues, don't bypass.
 - **NEVER expose Supabase service_role key** in client-side code. Only use it server-side.

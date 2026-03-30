@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     .innerJoin(sources, eq(articles.sourceId, sources.id))
     .leftJoin(articleClassifications, eq(articles.id, articleClassifications.articleId))
     .where(isNull(articleClassifications.id))
-    .limit(100)
+    .limit(250)
 
   if (unclassified.length === 0) {
     return NextResponse.json({ classified: 0, message: 'No unclassified articles' })
@@ -60,12 +60,8 @@ export async function POST(request: Request) {
     }
   }
 
-  // After classification, populate user queues with new articles
-  const queueResult = await populateQueueForAllUsers()
-
   return NextResponse.json({
     classified: totalClassified,
     total: unclassified.length,
-    queue: queueResult,
   })
 }
