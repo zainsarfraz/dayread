@@ -32,10 +32,12 @@ export function StatsView({
 }: StatsProps) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">Analytics</p>
-      <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
-        Reading habits
-      </h1>
+      <div className="animate-rise">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">Analytics</p>
+        <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-text-primary sm:text-4xl">
+          Reading habits
+        </h1>
+      </div>
 
       {/* Streak */}
       <div className="mt-8 rounded-xl border border-border bg-surface p-5">
@@ -146,7 +148,7 @@ export function StatsView({
                   </div>
                   <div className="mt-1 h-1.5 w-full rounded-full bg-surface-hover">
                     <div
-                      className="h-full rounded-full bg-accent transition-all"
+                      className="h-full rounded-full bg-accent animate-grow"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -176,7 +178,7 @@ export function StatsView({
                   </div>
                   <div className="mt-1 h-1.5 w-full rounded-full bg-surface-hover">
                     <div
-                      className="h-full rounded-full bg-accent transition-all"
+                      className="h-full rounded-full bg-accent animate-grow"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -209,7 +211,7 @@ export function StatsView({
                   </div>
                   <div className="mt-1 h-1.5 w-full rounded-full bg-surface-hover">
                     <div
-                      className="h-full rounded-full bg-accent transition-all"
+                      className="h-full rounded-full bg-accent animate-grow"
                       style={{ width: `${pct}%` }}
                     />
                   </div>

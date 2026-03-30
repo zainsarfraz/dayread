@@ -66,7 +66,7 @@ export function QueueView({ items, userName }: { items: QueueItem[]; userName: s
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       {/* Header */}
-      <div className="mb-10">
+      <div className="mb-10 animate-rise">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
           {getTimeOfDay()}
         </p>
@@ -79,7 +79,7 @@ export function QueueView({ items, userName }: { items: QueueItem[]; userName: s
 
       {/* Spotlight card */}
       {spotlight && (
-        <div className="mb-10">
+        <div className="mb-10 animate-rise" style={{ animationDelay: '100ms' }}>
           <SpotlightCard
             item={spotlight}
             dismissState={dismissing[spotlight.queueId]}
@@ -97,13 +97,18 @@ export function QueueView({ items, userName }: { items: QueueItem[]; userName: s
           </p>
           <div className="flex flex-col gap-3">
             {rest.map((item, i) => (
-              <CompactCard
+              <div
                 key={item.queueId}
-                item={item}
-                position={i + 2}
-                dismissState={dismissing[item.queueId]}
-                onAction={(action) => handleAction(item.queueId, item.articleId, action)}
-              />
+                className="animate-rise"
+                style={{ animationDelay: `${200 + i * 50}ms` }}
+              >
+                <CompactCard
+                  item={item}
+                  position={i + 2}
+                  dismissState={dismissing[item.queueId]}
+                  onAction={(action) => handleAction(item.queueId, item.articleId, action)}
+                />
+              </div>
             ))}
           </div>
         </div>
