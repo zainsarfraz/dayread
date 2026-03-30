@@ -123,14 +123,18 @@ export function ArticleView({
 
       {/* Summary */}
       {loading ? (
-        <div className="flex items-center gap-3 py-16 text-text-secondary">
-          <Loader2 className="h-4 w-4 animate-spin text-accent" />
-          <span className="text-sm">Generating summary...</span>
+        <div className="flex flex-col items-center py-20 text-center">
+          <div className="relative mb-5">
+            <div className="h-10 w-10 rounded-full border-2 border-surface-hover" />
+            <div className="absolute inset-0 h-10 w-10 animate-spin rounded-full border-2 border-transparent border-t-accent" />
+          </div>
+          <p className="text-sm font-medium text-text-secondary">Reading the article</p>
+          <p className="mt-1 text-xs text-text-tertiary">Preparing your summary...</p>
         </div>
       ) : (
         <div className="prose-article">
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-            AI Summary
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-text-tertiary">
+            Summary
           </p>
 
           {summary && (
