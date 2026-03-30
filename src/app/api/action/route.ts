@@ -34,7 +34,15 @@ export async function POST(request: Request) {
   if (queueId && (action === 'read' || action === 'skip' || action === 'bookmark')) {
     await db
       .update(userQueue)
-      .set({ status: action === 'read' ? 'read' : action, actedAt: new Date() })
+      .set({ status: action === 'bookmark' ? 'bookmarked' : action, actedAt: new Date() })
+      .where(and(eq(userQueue.id, queueId), eq(userQueue.userId, user.id)))
+  }
+
+  // Unbookmark: set status back to pending
+  if (queueId && action === 'unbookmark') {
+    await db
+      .update(userQueue)
+      .set({ status: 'pending', actedAt: null })
       .where(and(eq(userQueue.id, queueId), eq(userQueue.userId, user.id)))
   }
 
