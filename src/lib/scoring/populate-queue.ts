@@ -14,7 +14,7 @@ import {
   userPreferences,
   userQueue,
 } from '@/db/schema'
-import { eq, and, isNull, desc, gt } from 'drizzle-orm'
+import { eq, and, isNull, desc, gt, sql } from 'drizzle-orm'
 
 /**
  * Score a single article for a user based on their preference weights.
@@ -134,4 +134,45 @@ export async function populateQueueForUser(userId: string) {
   }
 
   return queueEntries.length
+}
+
+/**
+ * Recalculate scores for all pending queue items for a user.
+ * Called when user updates their preference weights in settings.
+ */
+export async function recalculateQueueForUser(userId: string) {
+  const prefs = await db
+    .select({ tag: userPreferences.tag, weight: userPreferences.weight })
+    .from(userPreferences)
+    .where(eq(userPreferences.userId, userId))
+
+  const weights: Record<string, number> = {}
+  for (const p of prefs) {
+    weights[p.tag] = p.weight
+  }
+
+  // Get all pending queue items with their article data
+  const pendingItems = await db
+    .select({
+      queueId: userQueue.id,
+      publishedAt: articles.publishedAt,
+      tags: articleClassifications.tags,
+      globalScore: articleClassifications.globalScore,
+    })
+    .from(userQueue)
+    .innerJoin(articles, eq(userQueue.articleId, articles.id))
+    .innerJoin(articleClassifications, eq(articles.id, articleClassifications.articleId))
+    .where(and(eq(userQueue.userId, userId), eq(userQueue.status, 'pending')))
+
+  let updated = 0
+  for (const item of pendingItems) {
+    const newScore = computeScore(item.tags, item.globalScore, item.publishedAt, weights)
+    await db
+      .update(userQueue)
+      .set({ score: newScore })
+      .where(eq(userQueue.id, item.queueId))
+    updated++
+  }
+
+  return updated
 }
