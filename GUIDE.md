@@ -274,7 +274,7 @@ pnpm db:studio    # Open Drizzle Studio (DB GUI)
 
 ## Not Yet Built
 
-- **Stats page** (`/stats`) — reading streaks, top topics, analytics
-- **Settings page** (`/settings`) — preference sliders, source toggles, theme
-- **Bookmarks view** — separate tab for bookmarked articles
+- **Daily AI Briefing** — personalized daily digest (see docs/plan-daily-briefing.md)
 - **Mobile responsive** — touch gestures for skip/bookmark
+- **UI polish** — landing page, animations, overall design refinement
+- **Deployment** — GitHub repo, Vercel, CI/CD, cron setup
