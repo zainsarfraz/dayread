@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Poll sources
         run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cron/poll" \
+          response=$(curl -sL -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cron/poll" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
             --max-time 120)
@@ -28,7 +28,7 @@ jobs:
 
       - name: Classify & populate queues
         run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cron/classify" \
+          response=$(curl -sL -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cron/classify" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
             --max-time 300)
