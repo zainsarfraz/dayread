@@ -7,8 +7,8 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
-import { articles, articleClassifications, articleSummaries, sources, userQueue } from '@/db/schema'
-import { eq, and } from 'drizzle-orm'
+import { articles, articleClassifications, articleSummaries, sources, userQueue, userActions } from '@/db/schema'
+import { eq, and, inArray } from 'drizzle-orm'
 import { notFound } from 'next/navigation'
 import { ArticleView } from './article-view'
 
@@ -49,12 +49,32 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     .where(and(eq(userQueue.userId, user.id), eq(userQueue.articleId, id)))
     .limit(1)
 
+  // Check if user already gave feedback
+  const feedbackActions = await db
+    .select({ action: userActions.action })
+    .from(userActions)
+    .where(
+      and(
+        eq(userActions.userId, user.id),
+        eq(userActions.articleId, id),
+        inArray(userActions.action, ['feedback_positive', 'feedback_negative']),
+      ),
+    )
+    .limit(1)
+
+  const existingFeedback = feedbackActions[0]?.action === 'feedback_positive'
+    ? 'up'
+    : feedbackActions[0]?.action === 'feedback_negative'
+      ? 'down'
+      : null
+
   return (
     <ArticleView
       article={article}
       userId={user.id}
       queueId={queueEntry?.id}
       queueStatus={queueEntry?.status}
+      existingFeedback={existingFeedback}
     />
   )
 }

@@ -31,11 +31,13 @@ export function ArticleView({
   userId,
   queueId,
   queueStatus,
+  existingFeedback,
 }: {
   article: ArticleData
   userId: string
   queueId?: string
   queueStatus?: string
+  existingFeedback?: 'up' | 'down' | null
 }) {
   const [summary, setSummary] = useState(article.summary)
   const [keyPoints, setKeyPoints] = useState(article.keyPoints)
@@ -209,8 +211,8 @@ export function ArticleView({
       <div className="mt-8 border-t border-border pt-6">
         <p className="mb-3 text-sm text-text-secondary">Was this useful?</p>
         <div className="flex gap-2">
-          <FeedbackButton icon={ThumbsUp} label="Yes" articleId={article.id} value="up" />
-          <FeedbackButton icon={ThumbsDown} label="No" articleId={article.id} value="down" />
+          <FeedbackButton icon={ThumbsUp} label="Yes" articleId={article.id} value="up" initialClicked={existingFeedback === 'up'} />
+          <FeedbackButton icon={ThumbsDown} label="No" articleId={article.id} value="down" initialClicked={existingFeedback === 'down'} />
         </div>
       </div>
     </div>
@@ -222,13 +224,15 @@ function FeedbackButton({
   label,
   articleId,
   value,
+  initialClicked,
 }: {
   icon: typeof ThumbsUp
   label: string
   articleId: string
   value: 'up' | 'down'
+  initialClicked: boolean
 }) {
-  const [clicked, setClicked] = useState(false)
+  const [clicked, setClicked] = useState(initialClicked)
 
   const handleClick = () => {
     if (clicked) return
