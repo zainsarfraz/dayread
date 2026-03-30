@@ -10,7 +10,7 @@ import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
 import { userPreferences, userSourcePreferences, userQueue, articles } from '@/db/schema'
 import { eq, and, inArray } from 'drizzle-orm'
-import { recalculateQueueForUser } from '@/lib/scoring/populate-queue'
+import { recalculateQueueForUser, populateQueueForUser } from '@/lib/scoring/populate-queue'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
@@ -71,8 +71,11 @@ export async function POST(request: Request) {
     }
   }
 
-  // Recalculate queue scores with new weights
+  // Recalculate existing queue scores with new weights
   const recalculated = await recalculateQueueForUser(user.id)
 
-  return NextResponse.json({ ok: true, recalculated })
+  // Repopulate queue — adds back articles from re-enabled sources
+  const repopulated = await populateQueueForUser(user.id)
+
+  return NextResponse.json({ ok: true, recalculated, repopulated })
 }
