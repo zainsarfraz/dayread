@@ -14,7 +14,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const result = await populateQueueForAllUsers()
-
-  return NextResponse.json(result)
+  try {
+    const result = await populateQueueForAllUsers()
+    return NextResponse.json(result)
+  } catch (err) {
+    console.error('Queue population failed:', err)
+    return NextResponse.json(
+      { error: String(err) },
+      { status: 500 },
+    )
+  }
 }

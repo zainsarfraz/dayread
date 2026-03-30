@@ -14,7 +14,7 @@ import {
   userPreferences,
   userQueue,
 } from '@/db/schema'
-import { eq, and, isNull, desc, sql } from 'drizzle-orm'
+import { eq, and, isNull, desc, gt } from 'drizzle-orm'
 
 /**
  * Score a single article for a user based on their preference weights.
@@ -110,7 +110,7 @@ export async function populateQueueForUser(userId: string) {
     .where(
       and(
         isNull(userQueue.id),
-        sql`${articles.createdAt} > ${sevenDaysAgo}`,
+        gt(articles.createdAt, sevenDaysAgo),
       ),
     )
     .orderBy(desc(articles.createdAt))

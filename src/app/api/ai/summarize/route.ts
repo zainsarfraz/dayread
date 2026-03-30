@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     articleId,
     summary: result.summary,
     keyPoints: result.keyPoints,
-    modelVersion: 'gemini-2.0-flash-lite',
+    modelVersion: 'gemini-3-flash-preview',
   }).onConflictDoNothing()
 
   return NextResponse.json(result)

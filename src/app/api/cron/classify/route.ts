@@ -50,7 +50,7 @@ export async function POST(request: Request) {
           hook: c.hook,
           category: c.category,
           globalScore: c.globalScore,
-          modelVersion: 'gemini-2.0-flash-lite',
+          modelVersion: 'gemini-3-flash-preview',
         }).onConflictDoNothing()
       }
 
