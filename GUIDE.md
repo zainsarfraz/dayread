@@ -137,6 +137,16 @@ summarize.ts   — Pass 2: On-demand summarization
                  Result cached in article_summaries table
 ```
 
+#### `src/lib/scoring/` — Personalization & Queue Scoring
+
+```
+populate-queue.ts  — Computes personalized scores and inserts articles into user_queue
+                     Score = avg(tag_weights) × global_score × recency_decay
+                     populateQueueForAllUsers() — runs after classification (all users)
+                     populateQueueForUser(userId) — runs on onboarding (single user)
+                     Only considers articles from the last 7 days
+```
+
 ### `src/app/` — Next.js App Router Pages
 
 #### Auth Pages (`src/app/(auth)/`)
@@ -145,7 +155,9 @@ summarize.ts   — Pass 2: On-demand summarization
 login/page.tsx     — Login page with "Continue with Google" button
                      Client component, calls supabase.auth.signInWithOAuth
 callback/route.ts  — OAuth callback handler (GET route)
-                     Exchanges auth code for session, redirects to /queue
+                     Exchanges auth code for session
+                     Creates user_profile on first login
+                     Redirects new users → /onboarding, returning users → /queue
 ```
 
 #### App Pages (`src/app/(app)/`) — Protected, require auth
@@ -162,6 +174,10 @@ article/[id]/page.tsx   — Server component: fetches article + classification +
 article/[id]/article-view.tsx — Client component: renders reading experience
                           On-demand summary generation, time tracking,
                           feedback buttons (thumbs up/down)
+onboarding/page.tsx     — Client component: interest selection for new users
+                          8 interest cards (LLM releases, coding tools, research, etc.)
+                          Saves tag weights to user_preferences via /api/onboarding
+                          Populates initial queue, redirects to /queue
 ```
 
 #### API Routes (`src/app/api/`)
@@ -181,6 +197,12 @@ action/route.ts         — POST: Record user actions (read, skip, bookmark, fee
                           Updates queue status, adjusts preference weights
                           Weight changes: bookmark +5, read +2, skip -1
                           Bonus +1 for reads > 2 minutes
+cron/populate/route.ts  — POST: Populate user queues with classified articles
+                          Protected by CRON_SECRET header
+                          Also called automatically after classification
+onboarding/route.ts     — POST: Save onboarding preferences and populate initial queue
+                          Creates/updates user_profile, saves tag weights
+                          Triggers queue population for the new user
 ```
 
 ### `src/components/` — Shared UI Components
@@ -215,7 +237,9 @@ Key Tailwind classes used throughout:
 
 ### Polling Flow
 ```
-Cron trigger → /api/cron/poll → adapters → articles table → /api/cron/classify → AI → article_classifications table
+Cron trigger → /api/cron/poll → adapters → articles table
+           → /api/cron/classify → AI → article_classifications table
+           → populateQueueForAllUsers() → user_queue table (per user, scored)
 ```
 
 ### Reading Flow
@@ -250,9 +274,7 @@ pnpm db:studio    # Open Drizzle Studio (DB GUI)
 
 ## Not Yet Built
 
-- **Onboarding page** (`/onboarding`) — interest selection for new users
 - **Stats page** (`/stats`) — reading streaks, top topics, analytics
 - **Settings page** (`/settings`) — preference sliders, source toggles, theme
-- **Queue population** — scoring + inserting articles into user_queue after classification
 - **Bookmarks view** — separate tab for bookmarked articles
 - **Mobile responsive** — touch gestures for skip/bookmark

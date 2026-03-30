@@ -10,6 +10,7 @@ import { db } from '@/db'
 import { articles, articleClassifications, sources } from '@/db/schema'
 import { eq, isNull } from 'drizzle-orm'
 import { classifyArticles } from '@/lib/ai/classify'
+import { populateQueueForAllUsers } from '@/lib/scoring/populate-queue'
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization')
@@ -59,5 +60,12 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ classified: totalClassified, total: unclassified.length })
+  // After classification, populate user queues with new articles
+  const queueResult = await populateQueueForAllUsers()
+
+  return NextResponse.json({
+    classified: totalClassified,
+    total: unclassified.length,
+    queue: queueResult,
+  })
 }
