@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
 import { userQueue, userActions, userPreferences, articleClassifications } from '@/db/schema'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, inArray } from 'drizzle-orm'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
@@ -22,13 +22,28 @@ export async function POST(request: Request) {
   const body = await request.json()
   const { queueId, articleId, action, timeSpentMs } = body
 
-  // Record the action
-  await db.insert(userActions).values({
-    userId: user.id,
-    articleId,
-    action,
-    timeSpentMs: timeSpentMs ?? null,
-  })
+  // For feedback actions, delete any previous feedback first so only the latest persists
+  if (action === 'feedback_positive' || action === 'feedback_negative' || action === 'feedback_clear') {
+    await db
+      .delete(userActions)
+      .where(
+        and(
+          eq(userActions.userId, user.id),
+          eq(userActions.articleId, articleId),
+          inArray(userActions.action, ['feedback_positive', 'feedback_negative']),
+        ),
+      )
+  }
+
+  // Record the action (skip for feedback_clear — we just deleted the old one)
+  if (action !== 'feedback_clear') {
+    await db.insert(userActions).values({
+      userId: user.id,
+      articleId,
+      action,
+      timeSpentMs: timeSpentMs ?? null,
+    })
+  }
 
   // Update queue status
   if (queueId && (action === 'read' || action === 'skip' || action === 'bookmark')) {

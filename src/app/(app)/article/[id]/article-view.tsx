@@ -208,58 +208,60 @@ export function ArticleView({
       </div>
 
       {/* Feedback */}
-      <div className="mt-8 border-t border-border pt-6">
-        <p className="mb-3 text-sm text-text-secondary">Was this useful?</p>
-        <div className="flex gap-2">
-          <FeedbackButton icon={ThumbsUp} label="Yes" articleId={article.id} value="up" initialClicked={existingFeedback === 'up'} />
-          <FeedbackButton icon={ThumbsDown} label="No" articleId={article.id} value="down" initialClicked={existingFeedback === 'down'} />
-        </div>
-      </div>
+      <FeedbackSection articleId={article.id} initial={existingFeedback ?? null} />
     </div>
   )
 }
 
-function FeedbackButton({
-  icon: Icon,
-  label,
-  articleId,
-  value,
-  initialClicked,
-}: {
-  icon: typeof ThumbsUp
-  label: string
-  articleId: string
-  value: 'up' | 'down'
-  initialClicked: boolean
-}) {
-  const [clicked, setClicked] = useState(initialClicked)
+function FeedbackSection({ articleId, initial }: { articleId: string; initial: 'up' | 'down' | null }) {
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(initial)
 
-  const handleClick = () => {
-    if (clicked) return
-    setClicked(true)
+  const handleClick = (value: 'up' | 'down') => {
+    const newValue = feedback === value ? null : value
+    setFeedback(newValue)
+
     fetch('/api/action', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         articleId,
-        action: value === 'up' ? 'feedback_positive' : 'feedback_negative',
+        action: newValue === null
+          ? 'feedback_clear'
+          : newValue === 'up'
+            ? 'feedback_positive'
+            : 'feedback_negative',
       }),
     })
   }
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={clicked}
-      className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors ${
-        clicked
-          ? 'border-accent/30 bg-accent-muted text-accent'
-          : 'border-border text-text-tertiary hover:bg-surface-hover hover:text-text-secondary'
-      }`}
-    >
-      <Icon className="h-4 w-4" />
-      {label}
-    </button>
+    <div className="mt-8 border-t border-border pt-6">
+      <p className="mb-3 text-sm text-text-secondary">Was this useful?</p>
+      <div className="flex gap-2">
+        <button
+          onClick={() => handleClick('up')}
+          className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+            feedback === 'up'
+              ? 'border-accent/30 bg-accent-muted text-accent'
+              : 'border-border text-text-tertiary hover:bg-surface-hover hover:text-text-secondary'
+          }`}
+        >
+          <ThumbsUp className="h-4 w-4" />
+          Yes
+        </button>
+        <button
+          onClick={() => handleClick('down')}
+          className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+            feedback === 'down'
+              ? 'border-accent/30 bg-accent-muted text-accent'
+              : 'border-border text-text-tertiary hover:bg-surface-hover hover:text-text-secondary'
+          }`}
+        >
+          <ThumbsDown className="h-4 w-4" />
+          No
+        </button>
+      </div>
+    </div>
   )
 }
 
