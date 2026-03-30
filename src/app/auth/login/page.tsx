@@ -5,7 +5,6 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import Link from 'next/link'
 
 export default function LoginPage() {
   const handleSignIn = async () => {
@@ -20,26 +19,17 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-6">
-      <div className="w-full max-w-sm">
-        <Link
-          href="/"
-          className="mb-12 inline-flex text-sm text-text-tertiary transition-colors hover:text-text-secondary"
-        >
-          &larr; Back
-        </Link>
-
-        <div className="text-center">
-          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-accent-muted">
-            <div className="h-3 w-3 rounded-full bg-accent" />
-          </div>
-
-          <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
-            Welcome to dayread
-          </h1>
-          <p className="mt-2 text-sm text-text-secondary">
-            Sign in to start your personalized reading queue
-          </p>
+      <div className="w-full max-w-sm text-center">
+        <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-accent-muted">
+          <div className="h-3 w-3 rounded-full bg-accent" />
         </div>
+
+        <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
+          Welcome to dayread
+        </h1>
+        <p className="mt-2 text-sm text-text-secondary">
+          Sign in to start your personalized reading queue
+        </p>
 
         <button
           onClick={handleSignIn}
@@ -49,7 +39,7 @@ export default function LoginPage() {
           Continue with Google
         </button>
 
-        <p className="mt-6 text-center text-xs leading-relaxed text-text-tertiary">
+        <p className="mt-6 text-xs leading-relaxed text-text-tertiary">
           By continuing, you agree to let Dayread store your reading
           preferences and activity to personalize your experience.
         </p>
