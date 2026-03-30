@@ -12,9 +12,10 @@ import {
   articleClassifications,
   userProfiles,
   userPreferences,
+  userSourcePreferences,
   userQueue,
 } from '@/db/schema'
-import { eq, and, isNull, desc, gt, sql } from 'drizzle-orm'
+import { eq, and, isNull, desc, gt, notInArray } from 'drizzle-orm'
 
 /**
  * Score a single article for a user based on their preference weights.
@@ -92,8 +93,17 @@ export async function populateQueueForUser(userId: string) {
     weights[p.tag] = p.weight
   }
 
+  // Get user's disabled sources
+  const disabledSources = await db
+    .select({ sourceId: userSourcePreferences.sourceId })
+    .from(userSourcePreferences)
+    .where(and(eq(userSourcePreferences.userId, userId), eq(userSourcePreferences.enabled, false)))
+
+  const disabledSourceIds = disabledSources.map((s) => s.sourceId)
+
   // Find classified articles not yet in this user's queue
   // Only consider articles from the last 7 days
+  // Exclude articles from disabled sources
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
 
   const newArticles = await db
@@ -116,6 +126,9 @@ export async function populateQueueForUser(userId: string) {
       and(
         isNull(userQueue.id),
         gt(articles.createdAt, sevenDaysAgo),
+        disabledSourceIds.length > 0
+          ? notInArray(articles.sourceId, disabledSourceIds)
+          : undefined,
       ),
     )
     .orderBy(desc(articles.createdAt))

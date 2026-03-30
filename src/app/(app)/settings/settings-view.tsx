@@ -14,9 +14,8 @@ type Source = {
   id: string
   name: string
   slug: string
-  url: string
   iconUrl: string | null
-  active: boolean
+  enabled: boolean
 }
 
 export function SettingsView({
@@ -32,7 +31,7 @@ export function SettingsView({
     Object.fromEntries(preferences.map((p) => [p.tag, p.weight])),
   )
   const [sourceStates, setSourceStates] = useState<Record<string, boolean>>(
-    Object.fromEntries(sources.map((s) => [s.id, s.active])),
+    Object.fromEntries(sources.map((s) => [s.id, s.enabled])),
   )
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'recalculating' | 'saved'>('idle')
   // Sort tags once on mount — don't re-sort while dragging sliders

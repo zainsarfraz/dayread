@@ -1,12 +1,13 @@
 /**
  * Settings page — user preferences, source management, and account.
  *
- * Shows preference weight sliders, source toggles, and account actions.
+ * Source toggles are per-user — disabling a source hides its articles
+ * from your queue without affecting other users or global polling.
  */
 
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
-import { userPreferences, sources, userProfiles } from '@/db/schema'
+import { userPreferences, sources, userSourcePreferences } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 import { SettingsView } from './settings-view'
 
@@ -15,7 +16,7 @@ export default async function SettingsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [preferences, allSources, profile] = await Promise.all([
+  const [preferences, allSources, userSourcePrefs] = await Promise.all([
     db
       .select({ tag: userPreferences.tag, weight: userPreferences.weight })
       .from(userPreferences)
@@ -25,17 +26,24 @@ export default async function SettingsPage() {
         id: sources.id,
         name: sources.name,
         slug: sources.slug,
-        url: sources.url,
         iconUrl: sources.iconUrl,
-        active: sources.active,
       })
       .from(sources),
     db
-      .select({ onboarded: userProfiles.onboarded })
-      .from(userProfiles)
-      .where(eq(userProfiles.id, user.id))
-      .limit(1),
+      .select({
+        sourceId: userSourcePreferences.sourceId,
+        enabled: userSourcePreferences.enabled,
+      })
+      .from(userSourcePreferences)
+      .where(eq(userSourcePreferences.userId, user.id)),
   ])
+
+  // Build source list with per-user enabled state (default: enabled)
+  const userSourceMap = Object.fromEntries(userSourcePrefs.map((p) => [p.sourceId, p.enabled]))
+  const sourcesWithState = allSources.map((s) => ({
+    ...s,
+    enabled: userSourceMap[s.id] ?? true,
+  }))
 
   return (
     <SettingsView
@@ -45,7 +53,7 @@ export default async function SettingsPage() {
         avatarUrl: user.user_metadata?.avatar_url,
       }}
       preferences={preferences}
-      sources={allSources}
+      sources={sourcesWithState}
     />
   )
 }

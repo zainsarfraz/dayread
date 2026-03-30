@@ -95,6 +95,21 @@ export const userProfiles = pgTable('user_profiles', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
+export const userSourcePreferences = pgTable(
+  'user_source_preferences',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => userProfiles.id),
+    sourceId: uuid('source_id')
+      .notNull()
+      .references(() => sources.id),
+    enabled: boolean('enabled').notNull().default(true),
+  },
+  (table) => [uniqueIndex('idx_user_source_pref').on(table.userId, table.sourceId)],
+)
+
 export const userPreferences = pgTable(
   'user_preferences',
   {
