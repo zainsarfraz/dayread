@@ -5,6 +5,8 @@
  * Top article gets spotlight treatment, rest in a compact list.
  */
 
+export const dynamic = 'force-dynamic'
+
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
 import { userQueue, articles, articleClassifications, sources } from '@/db/schema'

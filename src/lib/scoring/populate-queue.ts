@@ -28,13 +28,18 @@ function computeScore(
   weights: Record<string, number>,
 ) {
   // Sum weights for matching tags
+  // If user has preferences, unknown tags default to 30 (below neutral)
+  // If user has no preferences at all, everything defaults to 50
+  const hasPreferences = Object.keys(weights).length > 0
+  const defaultWeight = hasPreferences ? 30 : 50
+
   let tagScore = 0
   for (const tag of articleTags) {
-    tagScore += weights[tag] ?? 50 // default 50 for unknown tags
+    tagScore += weights[tag] ?? defaultWeight
   }
 
   // Normalize by number of tags to prevent articles with more tags scoring higher
-  const avgTagScore = articleTags.length > 0 ? tagScore / articleTags.length : 50
+  const avgTagScore = articleTags.length > 0 ? tagScore / articleTags.length : defaultWeight
 
   // Global score multiplier (0.0 - 1.0)
   const globalMultiplier = globalScore / 100

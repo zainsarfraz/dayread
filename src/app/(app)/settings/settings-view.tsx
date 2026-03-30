@@ -34,8 +34,7 @@ export function SettingsView({
   const [sourceStates, setSourceStates] = useState<Record<string, boolean>>(
     Object.fromEntries(sources.map((s) => [s.id, s.active])),
   )
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'recalculating' | 'saved'>('idle')
   // Sort tags once on mount — don't re-sort while dragging sliders
   const [tagOrder] = useState(() =>
     Object.entries(prefs)
@@ -45,30 +44,32 @@ export function SettingsView({
 
   const handleWeightChange = (tag: string, weight: number) => {
     setPrefs((prev) => ({ ...prev, [tag]: weight }))
-    setSaved(false)
+    setSaveState('idle')
   }
 
   const handleSourceToggle = (sourceId: string) => {
     setSourceStates((prev) => ({ ...prev, [sourceId]: !prev[sourceId] }))
-    setSaved(false)
+    setSaveState('idle')
   }
 
   const handleSave = async () => {
-    setSaving(true)
-    await fetch('/api/settings', {
+    setSaveState('saving')
+    const res = await fetch('/api/settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ preferences: prefs, sources: sourceStates }),
     })
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    setSaveState('recalculating')
+    // Small delay so user sees the recalculating state
+    await new Promise((r) => setTimeout(r, 500))
+    setSaveState('saved')
+    setTimeout(() => setSaveState('idle'), 2000)
   }
 
   const handleResetPreferences = () => {
     const reset = Object.fromEntries(Object.keys(prefs).map((tag) => [tag, 50]))
     setPrefs(reset)
-    setSaved(false)
+    setSaveState('idle')
   }
 
   const handleSignOut = async () => {
@@ -86,16 +87,19 @@ export function SettingsView({
         </div>
         <button
           onClick={handleSave}
-          disabled={saving}
+          disabled={saveState === 'saving' || saveState === 'recalculating'}
           className={clsx(
             'inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors',
-            saved
+            saveState === 'saved'
               ? 'bg-success/15 text-success'
-              : 'bg-accent text-white hover:bg-accent-hover',
+              : 'bg-accent text-white hover:bg-accent-hover disabled:opacity-70',
           )}
         >
           <Save className="h-4 w-4" />
-          {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
+          {saveState === 'saving' && 'Saving preferences...'}
+          {saveState === 'recalculating' && 'Recalculating queue...'}
+          {saveState === 'saved' && 'Saved & queue updated!'}
+          {saveState === 'idle' && 'Save Changes'}
         </button>
       </div>
 
