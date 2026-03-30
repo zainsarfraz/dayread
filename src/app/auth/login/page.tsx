@@ -20,9 +20,8 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
-        <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-accent-muted">
-          <div className="h-3 w-3 rounded-full bg-accent" />
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.jpg" alt="Dayread" className="mx-auto mb-5 h-14 w-14 rounded-xl" />
 
         <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
           Welcome to dayread

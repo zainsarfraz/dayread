@@ -45,8 +45,10 @@ export function NavBar({ user }: { user: NavUser }) {
     <nav className="sticky top-0 z-30 border-b border-border bg-bg/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-2xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/queue" className="text-lg font-semibold text-text-primary">
-          dayread
+        <Link href="/queue" className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.jpg" alt="" className="h-7 w-7 rounded-md" />
+          <span className="text-base font-semibold text-text-primary">dayread</span>
         </Link>
 
         {/* Desktop nav */}

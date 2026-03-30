@@ -11,7 +11,11 @@ export default function LandingPage() {
     <main className="min-h-dvh bg-bg">
       {/* Nav */}
       <header className="flex items-center justify-between px-6 py-6 animate-fade-in sm:px-10">
-        <span className="text-base font-semibold tracking-tight text-text-primary">dayread</span>
+        <span className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.jpg" alt="" className="h-7 w-7 rounded-md" />
+          <span className="text-base font-semibold tracking-tight text-text-primary">dayread</span>
+        </span>
         <Link
           href="/auth/login"
           className="rounded-md px-4 py-1.5 text-sm text-text-tertiary transition-colors hover:text-text-secondary"

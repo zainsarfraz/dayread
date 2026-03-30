@@ -24,6 +24,13 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   title: 'Dayread — Your daily dose of AI & tech',
   description: 'AI-curated tech news, paced for humans. One article at a time.',
+  icons: {
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
