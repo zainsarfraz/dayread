@@ -1,14 +1,16 @@
 # Plan: Deployment
 
-## Status: Not Started
+## Status: In Progress
 
-- [ ] Create GitHub repository
-- [ ] Push code to GitHub
+- [x] Create GitHub repository
+- [x] Push code to GitHub
+- [x] Create GitHub Actions cron workflow (.github/workflows/cron.yml)
+- [x] Create CI pipeline (.github/workflows/ci.yml)
 - [ ] Deploy to Vercel
 - [ ] Set environment variables in Vercel
-- [ ] Create GitHub Actions cron workflow
-- [ ] Create CI pipeline (typecheck + lint)
-- [ ] Update Supabase + Google OAuth redirect URLs
+- [ ] Set GitHub Actions secrets (APP_URL, CRON_SECRET)
+- [ ] Update Supabase redirect URLs with Vercel URL
+- [ ] Update Google OAuth redirect URIs with Vercel URL
 - [ ] Custom domain (optional)
 
 ## Goal

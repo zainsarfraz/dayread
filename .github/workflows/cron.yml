@@ -1,0 +1,44 @@
+name: Poll & Classify
+
+on:
+  schedule:
+    # Every 2 hours
+    - cron: '0 */2 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  poll-and-classify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poll sources
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cron/poll" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --max-time 120)
+
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+
+          echo "Poll response ($http_code): $body"
+
+          if [ "$http_code" -ne 200 ]; then
+            echo "::warning::Poll returned $http_code"
+          fi
+
+      - name: Classify & populate queues
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cron/classify" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --max-time 300)
+
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+
+          echo "Classify response ($http_code): $body"
+
+          if [ "$http_code" -ne 200 ]; then
+            echo "::error::Classify returned $http_code"
+            exit 1
+          fi
