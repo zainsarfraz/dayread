@@ -36,6 +36,12 @@ export function SettingsView({
   )
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  // Sort tags once on mount — don't re-sort while dragging sliders
+  const [tagOrder] = useState(() =>
+    Object.entries(prefs)
+      .sort((a, b) => b[1] - a[1])
+      .map(([tag]) => tag),
+  )
 
   const handleWeightChange = (tag: string, weight: number) => {
     setPrefs((prev) => ({ ...prev, [tag]: weight }))
@@ -70,8 +76,6 @@ export function SettingsView({
     await supabase.auth.signOut()
     window.location.href = '/'
   }
-
-  const sortedTags = Object.entries(prefs).sort((a, b) => b[1] - a[1])
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
@@ -141,17 +145,17 @@ export function SettingsView({
         </div>
 
         <div className="mt-5 flex flex-col gap-4">
-          {sortedTags.map(([tag, weight]) => (
+          {tagOrder.map((tag) => (
             <div key={tag}>
               <div className="flex items-center justify-between text-sm">
                 <span className="font-mono text-text-primary">{formatTag(tag)}</span>
-                <span className="w-8 text-right text-text-tertiary">{Math.round(weight)}</span>
+                <span className="w-8 text-right text-text-tertiary">{Math.round(prefs[tag] ?? 50)}</span>
               </div>
               <input
                 type="range"
                 min={0}
                 max={100}
-                value={weight}
+                value={prefs[tag] ?? 50}
                 onChange={(e) => handleWeightChange(tag, Number(e.target.value))}
                 className="mt-1.5 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-surface-hover accent-accent"
               />
@@ -159,7 +163,7 @@ export function SettingsView({
           ))}
         </div>
 
-        {sortedTags.length === 0 && (
+        {tagOrder.length === 0 && (
           <p className="mt-4 text-sm text-text-tertiary">
             No preferences yet. Read some articles to build your profile.
           </p>
