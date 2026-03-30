@@ -7,8 +7,8 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
-import { articles, articleClassifications, articleSummaries, sources } from '@/db/schema'
-import { eq } from 'drizzle-orm'
+import { articles, articleClassifications, articleSummaries, sources, userQueue } from '@/db/schema'
+import { eq, and } from 'drizzle-orm'
 import { notFound } from 'next/navigation'
 import { ArticleView } from './article-view'
 
@@ -42,10 +42,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   if (!article) notFound()
 
+  // Get queue entry for this user + article
+  const [queueEntry] = await db
+    .select({ id: userQueue.id, status: userQueue.status })
+    .from(userQueue)
+    .where(and(eq(userQueue.userId, user.id), eq(userQueue.articleId, id)))
+    .limit(1)
+
   return (
     <ArticleView
       article={article}
       userId={user.id}
+      queueId={queueEntry?.id}
+      queueStatus={queueEntry?.status}
     />
   )
 }

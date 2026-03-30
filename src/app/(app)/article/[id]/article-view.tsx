@@ -8,7 +8,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { ArrowLeft, Bookmark, ExternalLink, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react'
+import { ArrowLeft, Check, ExternalLink, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 type ArticleData = {
@@ -26,10 +26,21 @@ type ArticleData = {
   keyPoints: string[] | null
 }
 
-export function ArticleView({ article, userId }: { article: ArticleData; userId: string }) {
+export function ArticleView({
+  article,
+  userId,
+  queueId,
+  queueStatus,
+}: {
+  article: ArticleData
+  userId: string
+  queueId?: string
+  queueStatus?: string
+}) {
   const [summary, setSummary] = useState(article.summary)
   const [keyPoints, setKeyPoints] = useState(article.keyPoints)
   const [loading, setLoading] = useState(!article.summary)
+  const [markedRead, setMarkedRead] = useState(queueStatus === 'read')
   const startTime = useRef(Date.now())
 
   // Generate summary on demand if not cached
@@ -57,22 +68,13 @@ export function ArticleView({ article, userId }: { article: ArticleData; userId:
     generateSummary()
   }, [article.id, article.summary])
 
-  // Track time spent on unmount
+  // Log view action on mount
   useEffect(() => {
-    return () => {
-      const timeSpent = Date.now() - startTime.current
-      // Fire and forget — don't block navigation
-      fetch('/api/action', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          articleId: article.id,
-          action: 'read',
-          timeSpentMs: timeSpent,
-        }),
-        keepalive: true,
-      })
-    }
+    fetch('/api/action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ articleId: article.id, action: 'view' }),
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -160,16 +162,48 @@ export function ArticleView({ article, userId }: { article: ArticleData; userId:
       {/* Divider */}
       <hr className="my-8 border-border" />
 
-      {/* Original article link */}
-      <a
-        href={article.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-hover"
-      >
-        <ExternalLink className="h-4 w-4" />
-        Read full article
-      </a>
+      {/* Actions */}
+      <div className="flex items-center gap-3">
+        <a
+          href={article.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-hover"
+        >
+          <ExternalLink className="h-4 w-4" />
+          Read full article
+        </a>
+
+        {queueId && !markedRead && (
+          <button
+            onClick={() => {
+              setMarkedRead(true)
+              const timeSpent = Date.now() - startTime.current
+              fetch('/api/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  queueId,
+                  articleId: article.id,
+                  action: 'read',
+                  timeSpentMs: timeSpent,
+                }),
+              })
+            }}
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+          >
+            <Check className="h-4 w-4" />
+            Mark as Read
+          </button>
+        )}
+
+        {markedRead && (
+          <span className="inline-flex items-center gap-2 px-5 py-2.5 text-sm text-success">
+            <Check className="h-4 w-4" />
+            Marked as read
+          </span>
+        )}
+      </div>
 
       {/* Feedback */}
       <div className="mt-8 border-t border-border pt-6">
