@@ -2,7 +2,7 @@
  * Reddit adapter for r/LocalLLaMA.
  *
  * Fetches top posts of the day via Reddit's JSON API.
- * Filters by score > 50.
+ * Filters by score > 50. Handles rate limiting and HTML error pages.
  */
 
 import type { ParsedArticle } from './types'
@@ -11,9 +11,19 @@ export async function pollReddit(): Promise<ParsedArticle[]> {
   const res = await fetch('https://www.reddit.com/r/LocalLLaMA/top.json?t=day&limit=50', {
     signal: AbortSignal.timeout(30_000),
     headers: {
-      'User-Agent': 'Dayread/1.0 (personal news aggregator)',
+      'User-Agent': 'Dayread/1.0 (personal news aggregator; contact: github.com/zainsarfraz/dayread)',
     },
   })
+
+  // Reddit sometimes returns HTML error pages instead of JSON
+  const contentType = res.headers.get('content-type') ?? ''
+  if (!contentType.includes('json')) {
+    throw new Error(`Reddit returned non-JSON response (${res.status}, ${contentType})`)
+  }
+
+  if (!res.ok) {
+    throw new Error(`Reddit returned ${res.status}`)
+  }
 
   const data = await res.json()
   const posts = data?.data?.children ?? []
