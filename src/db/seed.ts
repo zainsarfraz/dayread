@@ -56,7 +56,7 @@ const INITIAL_SOURCES = [
   {
     name: 'OpenAI Blog',
     slug: 'openai-blog',
-    url: 'https://openai.com/news/rss',
+    url: 'https://openai.com/blog/rss.xml',
     type: 'rss' as const,
     iconUrl: 'https://openai.com/favicon.ico',
   },
